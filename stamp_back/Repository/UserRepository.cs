@@ -39,7 +39,7 @@ namespace stamp_back.Repository
 
         public bool UserExist(Guid id)
         {
-            return _context.Users.All(x => x.Id == id);
+            return _context.Users.Any(x => x.Id == id);
         }
     }
 
