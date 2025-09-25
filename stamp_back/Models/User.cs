@@ -9,7 +9,12 @@
 
         //public string icon_url { get; set; }
 
+
+        // Navigation property to messages
+        public ICollection<Message> Messages { get; set; }
+
         //foreignkey
         public ICollection<UserChat> UserChats { get; set; }
+        
     }
 }

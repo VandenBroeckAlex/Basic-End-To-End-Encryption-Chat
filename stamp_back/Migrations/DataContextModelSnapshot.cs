@@ -50,16 +50,18 @@ namespace stamp_back.Migrations
                     b.Property<Guid?>("ChatId")
                         .HasColumnType("char(36)");
 
-                    b.Property<Guid>("SenderId")
-                        .HasColumnType("char(36)");
-
                     b.Property<string>("TimeStamp")
                         .IsRequired()
                         .HasColumnType("longtext");
 
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("char(36)");
+
                     b.HasKey("Id");
 
                     b.HasIndex("ChatId");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("Messages");
                 });
@@ -107,6 +109,14 @@ namespace stamp_back.Migrations
                     b.HasOne("stamp_back.Models.Chat", null)
                         .WithMany("Messages")
                         .HasForeignKey("ChatId");
+
+                    b.HasOne("stamp_back.Models.User", "User")
+                        .WithMany("Messages")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("stamp_back.Models.UserChat", b =>
@@ -133,6 +143,8 @@ namespace stamp_back.Migrations
 
             modelBuilder.Entity("stamp_back.Models.User", b =>
                 {
+                    b.Navigation("Messages");
+
                     b.Navigation("UserChats");
                 });
 #pragma warning restore 612, 618

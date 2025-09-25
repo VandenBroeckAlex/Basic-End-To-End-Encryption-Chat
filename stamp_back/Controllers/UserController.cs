@@ -67,7 +67,7 @@ namespace stamp_back.Controllers
 
         [HttpGet("email/{email}")]
         [ProducesResponseType(2000, Type = typeof(User))]
-        [ProducesResponseType(400)]
+        [ProducesResponseType(400)] 
         public IActionResult GetUserByEmail(string email) 
         {
             var user = _mapper.Map<UserDto>(_userRepository.GetUserByEmail(email));
