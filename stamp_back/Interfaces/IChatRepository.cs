@@ -9,6 +9,6 @@ namespace stamp_back.Interfaces
         Chat GetChatByName(string name);
 
         Chat GetChatById(Guid id);
-              
+       
     }
 }
