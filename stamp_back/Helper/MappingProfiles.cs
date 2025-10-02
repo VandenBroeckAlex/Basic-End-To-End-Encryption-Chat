@@ -8,7 +8,9 @@ namespace stamp_back.Helper
     {
         public MappingProfiles()
         {
-                CreateMap<User,UserDto>();
+            CreateMap<User,UserDto>();
+            CreateMap<Chat, ChatDto>();
+            CreateMap<ChatDto.ChatCreateDto, Chat>();
         }
     }
 }

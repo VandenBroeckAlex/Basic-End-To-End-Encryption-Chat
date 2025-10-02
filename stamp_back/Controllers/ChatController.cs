@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Mvc;
 using stamp_back.Interfaces;
 using stamp_back.Models;
 using System;
+using stamp_back.Dto;
+using stamp_back.Repository;
 
 namespace stamp_back.Controllers
 {
@@ -11,12 +13,17 @@ namespace stamp_back.Controllers
     public class ChatController : Controller
     {
         private readonly IChatRepository _chatRepository;
+        private readonly IUserRepository _userRepository;
+        private readonly IUserChatRepository _userChatRepository;
         private readonly IMapper _mapper;
+    
 
-        public ChatController(IChatRepository chatRepository, IMapper mapper)
+        public ChatController(IChatRepository chatRepository, IMapper mapper, IUserRepository userRepository, IUserChatRepository userChatRepository)
         {
             _chatRepository = chatRepository;
             _mapper = mapper;
+            _userRepository = userRepository;
+            _userChatRepository = userChatRepository;
         }
 
         [HttpGet]
@@ -72,6 +79,51 @@ namespace stamp_back.Controllers
             }
             return Ok(chat);
         }
-        //GetChatByName
+
+        [HttpPost]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(400)]
+        public IActionResult CreateChat([FromBody] ChatDto.ChatCreateDto chatCreate)
+        {
+            if (chatCreate == null)
+                return BadRequest("Chat data is required.");
+            //Check if valid users
+            bool usersExist = _userRepository.UserExist(chatCreate.User1) && _userRepository.UserExist(chatCreate.User2);
+            if (!usersExist)
+                return BadRequest("One or both users do not exist.");
+
+            // Check if users have already a chat
+            var existingChatId = _chatRepository.ChatExistsByUsers(chatCreate.User1, chatCreate.User2);
+            if (existingChatId != null)
+                return Ok(new { ChatId = existingChatId, Message = "Chat already exists." });
+
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            //create chat
+            var chatMap = _mapper.Map<Chat>(chatCreate);
+            var chatCreated = _chatRepository.CreateChat(chatMap);
+            if (!chatCreated)
+            {
+                ModelState.AddModelError("", "Something went wrong while creating the chat.");
+                return StatusCode(500, ModelState);
+            }
+
+            //TODO: create user chat relation
+
+            var userChats = new List<UserChat>
+            {
+                new UserChat { ChatId = chatMap.Id, UserId = chatCreate.User1 },
+                new UserChat { ChatId = chatMap.Id, UserId = chatCreate.User2 }
+            };
+
+            foreach(var userChat in userChats)
+            {
+                var _userChat = _userChatRepository.CreateUserChat(userChat);
+            }
+
+            return Ok(chatCreated);
+        }
     }
 }
