@@ -45,7 +45,11 @@ namespace stamp_back.Repository
         }
 
 
-        //public User GetUserByEmail(string email)
+        public bool ChatExist(Guid id)
+        {
+            return _context.Chats.Any(c=> c.Id == id);
+        }
+        //public User GetUserByEmail(string email
         //{
         //    return _context.Users.Where(p => p.Email == email).FirstOrDefault();
         //}
