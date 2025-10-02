@@ -1,4 +1,5 @@
-﻿using stamp_back.Models;
+﻿using stamp_back.Dto;
+using stamp_back.Models;
 
 namespace stamp_back.Interfaces
 {
@@ -9,7 +10,9 @@ namespace stamp_back.Interfaces
         User GetUserById(Guid id);
         User GetUserByName(string username);
         User GetUserByEmail(string email);
-        bool UserExist(Guid id);        
+        bool UserExist(Guid id);     
+        
+        bool PostUser(User user);
     }
     //get user by name
     //get user by mail

@@ -50,5 +50,7 @@ namespace stamp_back.Controllers
             }
             return Ok(messages);
         }
+
+        //Check if user in chat before sending or reciving message
     }
 }

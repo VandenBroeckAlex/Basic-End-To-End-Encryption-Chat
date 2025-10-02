@@ -15,6 +15,7 @@ namespace stamp_back.Controllers
         private readonly IUserRepository _userRepository;
         private readonly IMapper _mapper;
 
+        // GET 
         public UserController(IUserRepository userRepository, IMapper mapper)
         {
             _userRepository = userRepository;
@@ -74,6 +75,21 @@ namespace stamp_back.Controllers
             if(!ModelState.IsValid)
                 return BadRequest(ModelState);
             return Ok(user);
+        }
+        //POST
+        [HttpPost("")]
+        public IActionResult Register(UserDto.UserRegisterDto _user)
+        {
+            var user = new User
+            {
+                UserName = _user.UserName,
+                Email = _user.Email,
+                Password = BCrypt.Net.BCrypt.HashPassword(_user.Password),
+            };
+
+            var response = _userRepository.PostUser(user);
+
+            return Ok(response);
         }
     }
 }

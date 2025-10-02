@@ -86,11 +86,19 @@ namespace stamp_back.Controllers
         public IActionResult CreateChat([FromBody] ChatDto.ChatCreateDto chatCreate)
         {
             if (chatCreate == null)
-                return BadRequest("Chat data is required.");
+            {
+
+                ModelState.AddModelError("", "Chat data is required.");
+                return StatusCode(422, ModelState);
+            }
             //Check if valid users
             bool usersExist = _userRepository.UserExist(chatCreate.User1) && _userRepository.UserExist(chatCreate.User2);
             if (!usersExist)
-                return BadRequest("One or both users do not exist.");
+            {
+                ModelState.AddModelError("", "One or both users do not exist.");
+                return StatusCode(422, ModelState);
+            }
+                
 
             // Check if users have already a chat
             var existingChatId = _chatRepository.ChatExistsByUsers(chatCreate.User1, chatCreate.User2);
@@ -123,7 +131,7 @@ namespace stamp_back.Controllers
                 var _userChat = _userChatRepository.CreateUserChat(userChat);
             }
 
-            return Ok(chatCreated);
+            return Ok($"chatId : {chatMap.Id}");
         }
     }
 }

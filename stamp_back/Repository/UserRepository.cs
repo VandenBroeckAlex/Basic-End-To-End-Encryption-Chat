@@ -1,4 +1,5 @@
 ﻿using stamp_back.Data;
+using stamp_back.Dto;
 using stamp_back.Interfaces;
 using stamp_back.Models;
 
@@ -41,7 +42,20 @@ namespace stamp_back.Repository
         {
             return _context.Users.Any(x => x.Id == id);
         }
+
+        public bool PostUser(User _user)
+        {
+            _context.Add(_user);
+            return Save();
+        }
+        public bool Save()
+        {
+            var saved = _context.SaveChanges();
+            return saved > 0 ? true : false;
+        }
     }
 
-    
 }
+
+    
+
