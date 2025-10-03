@@ -1,4 +1,5 @@
-﻿using stamp_back.Data;
+﻿using Microsoft.AspNetCore.Http.HttpResults;
+using stamp_back.Data;
 using stamp_back.Dto;
 using stamp_back.Interfaces;
 using stamp_back.Models;
@@ -11,9 +12,14 @@ namespace stamp_back.Repository
 
         public UserRepository(DataContext context) => this._context = context;
 
-        public User GetUserByEmail(string email)
+        public User? GetUserByEmail(string email)
         {
-            return _context.Users.Where(p => p.Email == email).FirstOrDefault();
+            var user = _context.Users.Where(p => p.Email == email).FirstOrDefault();
+            if (user == null) 
+            {
+                return null;
+            }
+            return user;
         }
 
         public User GetUserById(Guid id)
@@ -43,10 +49,11 @@ namespace stamp_back.Repository
             return _context.Users.Any(x => x.Id == id);
         }
 
-        public bool PostUser(User _user)
+        public User PostUser(User _user)
         {
-            _context.Add(_user);
-            return Save();
+            _context.Users.Add(_user);
+            _context.SaveChanges();
+            return _user;
         }
         public bool Save()
         {

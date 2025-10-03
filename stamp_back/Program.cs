@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using stamp_back.Data;
+using stamp_back.Helper;
 using stamp_back.Interfaces;
 using stamp_back.Repository;
 using stamp_back.Seeder;
@@ -9,12 +10,14 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 
 builder.Services.AddControllers();
+builder.Services.AddCors();
 builder.Services.AddTransient<Seed>();
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IChatRepository, ChatRepository>();
 builder.Services.AddScoped<IMessageRepository, MessageRepository>();
 builder.Services.AddScoped<IUserChatRepository, UserChatRepository>();
+builder.Services.AddScoped<JwtService>();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -49,6 +52,13 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseCors(options => options
+.WithOrigins(new[]{ "https://localhost:7022/", "https://localhost:8080/", "https://localhost:4200/"})
+.AllowAnyHeader()  
+.AllowAnyMethod()
+.AllowCredentials()
+);
 
 app.UseAuthorization();
 

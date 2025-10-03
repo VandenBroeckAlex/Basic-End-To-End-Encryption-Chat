@@ -12,7 +12,7 @@ namespace stamp_back.Interfaces
         User GetUserByEmail(string email);
         bool UserExist(Guid id);     
         
-        bool PostUser(User user);
+        User PostUser(User user);
     }
     //get user by name
     //get user by mail

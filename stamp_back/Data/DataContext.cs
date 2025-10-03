@@ -19,6 +19,9 @@ namespace stamp_back.Data
             modelBuilder.Entity<UserChat>()
                 .HasKey(pc => new { pc.UserId, pc.ChatId });
 
+            modelBuilder.Entity<User>()
+                .HasIndex(u => u.Email)
+                .IsUnique();
         }   
     }
 }

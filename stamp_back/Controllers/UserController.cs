@@ -87,9 +87,9 @@ namespace stamp_back.Controllers
                 Password = BCrypt.Net.BCrypt.HashPassword(_user.Password),
             };
 
-            var response = _userRepository.PostUser(user);
-
-            return Ok(response);
+            
+ 
+            return Created("sucess", _userRepository.PostUser(user));
         }
     }
 }
