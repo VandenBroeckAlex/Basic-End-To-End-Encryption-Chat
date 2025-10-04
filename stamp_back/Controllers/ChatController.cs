@@ -5,6 +5,7 @@ using stamp_back.Models;
 using System;
 using stamp_back.Dto;
 using stamp_back.Repository;
+using Microsoft.AspNetCore.Authorization;
 
 namespace stamp_back.Controllers
 {
@@ -41,6 +42,7 @@ namespace stamp_back.Controllers
         [HttpGet("id/{chatId:guid}")]
         [ProducesResponseType(200,Type = typeof(Chat))]
         [ProducesResponseType(400)]
+        
         public IActionResult GetChatById(Guid chatId)
         {
             var chat = _chatRepository.GetChatById(chatId);
@@ -55,6 +57,7 @@ namespace stamp_back.Controllers
         [HttpGet("Userid/{userId:guid}")]
         [ProducesResponseType(200, Type = typeof(Chat))]
         [ProducesResponseType(400)]
+        [Authorize]
         public IActionResult GetChatByUserId(Guid userId)
         {
             var chat = _chatRepository.GetAllChatsByUserId(userId);

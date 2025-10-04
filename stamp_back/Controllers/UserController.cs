@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Mvc;
 using stamp_back.Dto;
@@ -10,6 +11,7 @@ namespace stamp_back.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    
     public class UserController : Controller
     {
         private readonly IUserRepository _userRepository;
