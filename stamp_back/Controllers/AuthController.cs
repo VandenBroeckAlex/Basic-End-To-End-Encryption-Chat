@@ -1,14 +1,13 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.CookiePolicy;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
-using stamp_back.Interfaces;
 using stamp_back.Dto;
-
-
-using stamp_back.Models;
-using Microsoft.AspNetCore.Http.HttpResults;
 using stamp_back.Helper;
-using Microsoft.AspNetCore.CookiePolicy;
+using stamp_back.Interfaces;
+using stamp_back.Models;
+using System.Security.Claims;
 
 namespace stamp_back.Controllers
 {
@@ -39,18 +38,9 @@ namespace stamp_back.Controllers
                 return BadRequest(new { message = "Invalid Credentials" });
             }
 
-            var jwt = _jwtService.generate(user.Id);
+            var jwt = _jwtService.GenerateToken(user);
 
-            Response.Cookies.Append("Jwt", jwt, new CookieOptions
-            {
-                HttpOnly = true
-            })
-            ;
-
-            return Ok(new
-            {
-                message = "success"
-            });
+            return Ok(new { token = jwt });
         }
 
         [HttpGet("user")]
@@ -62,15 +52,20 @@ namespace stamp_back.Controllers
 
                 var token = _jwtService.Verify(jwt);
 
-                var userID = Guid.Parse(token.Issuer);
+                var userIdClaim = token.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier);
 
-                var user = _userRepository.GetUserById(userID);
+                if (userIdClaim == null)
+                    return Unauthorized("No user ID in token.");
+
+                var userId = Guid.Parse(userIdClaim.Value);
+
+                var user = _userRepository.GetUserById(userId);
 
                 return Ok(user);
             }
             catch (Exception ex)
             {
-                return Unauthorized();
+                return Unauthorized(ex.Message);
             }
           
         }

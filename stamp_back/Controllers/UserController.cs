@@ -11,7 +11,7 @@ namespace stamp_back.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    
+    [Authorize]
     public class UserController : Controller
     {
         private readonly IUserRepository _userRepository;
