@@ -24,23 +24,32 @@ namespace stamp_back.Controllers
         }
 
         [HttpPost("login")] 
-        public IActionResult Login(LoginDto.UserRegisterDto dto)
+        public async Task<TokenResponseDto> Login(LoginDto.UserRegisterDto dto)
         {
-          User user =  _userRepository.GetUserByEmail(dto.Email);
+            User user = _userRepository.GetUserByEmail(dto.Email);
 
             if (user == null)
             {
-                return BadRequest(new { message = "Invalid Credentials" });
+                return null;
             }
 
-            if(!BCrypt.Net.BCrypt.Verify(dto.Password, user.Password))
+            if (!BCrypt.Net.BCrypt.Verify(dto.Password, user.Password))
             {
-                return BadRequest(new { message = "Invalid Credentials" });
+                return null;
             }
 
-            var jwt = _jwtService.GenerateToken(user);
+            TokenResponseDto response = await CreateTokenResponse(user);
 
-            return Ok(new { token = jwt });
+            return response;
+        }
+
+        private async Task<TokenResponseDto> CreateTokenResponse(User user)
+        {
+            return new TokenResponseDto
+            {
+                AccessToken = _jwtService.GenerateToken(user),
+                RefreshToken = await _jwtService.GenerateAndSaveRefreshTokenAsync(user)
+            };
         }
 
         [HttpGet("user")]
@@ -68,6 +77,17 @@ namespace stamp_back.Controllers
                 return Unauthorized(ex.Message);
             }
           
+        }
+
+        [HttpPost("refresh-token")]
+        public async Task<ActionResult<TokenResponseDto>> RefreshToken(RefreshTokenRequestDto request)
+        {
+            var result = await _jwtService.RefreshTokenAsync(request);
+            if(result is null || result.AccessToken is null ||  result.RefreshToken is null)
+            {
+                return Unauthorized("Invalid Refresh Token");
+            }
+            return Ok(result);
         }
 
         [HttpPost("logout")]
