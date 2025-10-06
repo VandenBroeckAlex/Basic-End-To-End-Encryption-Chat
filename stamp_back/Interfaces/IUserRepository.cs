@@ -7,12 +7,16 @@ namespace stamp_back.Interfaces
     {
         ICollection<User> GetUsers();
         ICollection<User> GetUsers(string username);
-        User GetUserById(Guid id);
-        User GetUserByName(string username);
-        User GetUserByEmail(string email);
+        User? GetUserById(Guid id);
+        User? GetUserByName(string username);
+        User? GetUserByEmail(string email);
+
+        User PostUser(User user);
+        User UpdateUser(User user);
+
         bool UserExist(Guid id);     
         
-        User PostUser(User user);
+        
     }
     //get user by name
     //get user by mail
