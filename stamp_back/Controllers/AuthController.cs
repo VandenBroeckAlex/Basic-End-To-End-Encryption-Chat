@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.CookiePolicy;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
@@ -51,32 +52,26 @@ namespace stamp_back.Controllers
                 RefreshToken = await _jwtService.GenerateAndSaveRefreshTokenAsync(user)
             };
         }
-
+        [Authorize]
         [HttpGet("user")]
-        public IActionResult User()
+        public IActionResult GetUser()
         {
             try
             {
-                var jwt = Request.Cookies["Jwt"];
+                var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+                var email = User.FindFirst(ClaimTypes.Email)?.Value;
 
-                var token = _jwtService.Verify(jwt);
-
-                var userIdClaim = token.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier);
-
-                if (userIdClaim == null)
-                    return Unauthorized("No user ID in token.");
-
-                var userId = Guid.Parse(userIdClaim.Value);
-
-                var user = _userRepository.GetUserById(userId);
-
-                return Ok(user);
+                return Ok(new
+                {
+                    UserId = userId,
+                    Email = email
+                });
             }
             catch (Exception ex)
             {
                 return Unauthorized(ex.Message);
             }
-          
+           
         }
 
         [HttpPost("refresh-token")]
