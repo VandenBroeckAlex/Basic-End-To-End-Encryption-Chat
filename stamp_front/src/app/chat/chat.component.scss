@@ -5,8 +5,10 @@
     align-items: center;
 
     p{
-        margin: 0;
-        color: red
+        margin-top: 10px;
+        height: 10%;
+        border-style: solid;
+       
     }
 }
 .chat-list{
@@ -14,6 +16,7 @@
     width: 24%;
     height: 95%;
     border-radius: 30px;
+    overflow: hidden;
 
 }
 .chat{
@@ -21,5 +24,6 @@
     width: 71%;
     height: 95%;
     border-radius: 30px;
+    overflow: hidden;
 }
 
