@@ -2,8 +2,30 @@ header{
     display: flex;
     padding-inline: 16px;
     padding-block: 8px;
-    background-color: #333;
+    background-color: #aeadb3;
+    height: 5%;
     color: white;
     align-items: center;
     justify-content: center;
 }
+
+nav{
+    display: flex;
+    width: 80%;
+    justify-content: space-between;
+    align-items: center;
+
+    ul{
+        display: flex;
+        width: 40%;
+        justify-content: space-between;
+        list-style: none;
+        li{
+            cursor: pointer;
+            &:hover{
+                color: #777;
+            }
+        }
+    }
+}
+

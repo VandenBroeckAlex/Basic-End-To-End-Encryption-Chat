@@ -1,5 +1,11 @@
 <header>
     <nav>
-        {{title()}}
+        <span routerLink="/">{{title()}}</span>
+        <ul>
+            <li routerLink="/login">Login</li>
+            <li routerLink="/register">Register</li>
+            <li routerLink="/chat">Chat</li>
+            <li routerLink="/chatList">ChatList</li>
+        </ul>
     </nav>
 </header>

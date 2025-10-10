@@ -1,0 +1,25 @@
+.page{
+    height: 100%;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+
+    p{
+        margin: 0;
+        color: red
+    }
+}
+.chat-list{
+    background-color: white;
+    width: 24%;
+    height: 95%;
+    border-radius: 30px;
+
+}
+.chat{
+    background-color: white;
+    width: 71%;
+    height: 95%;
+    border-radius: 30px;
+}
+
