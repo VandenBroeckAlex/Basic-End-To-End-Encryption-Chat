@@ -1,6 +1,7 @@
 ﻿using stamp_back.Data;
 using stamp_back.Interfaces;
 using stamp_back.Models;
+using System.Linq;
 
 namespace stamp_back.Repository
 {
@@ -30,6 +31,24 @@ namespace stamp_back.Repository
                 if(message != null) messages.Add(message);
             }
             return messages;                         
+        }
+
+        public Message? PostMessage(Message _message)
+        {
+            var user = _context.Users.Where(u => u.Id == _message.UserId).FirstOrDefault(); 
+            var chat = _context.Chats.Where(c => c.Id ==  _message.ChatId).FirstOrDefault();
+            if (user is null)
+            {
+                return null;
+            }
+            if (chat is null)
+            {
+                return null;
+            }
+
+            _context.Messages.Add(_message);
+            _context.SaveChanges();
+            return _message;
         }
     }
 }

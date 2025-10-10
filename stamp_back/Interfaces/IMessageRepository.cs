@@ -8,5 +8,7 @@ namespace stamp_back.Interfaces
         ICollection<Message> GetAllMessages();
 
         ICollection<Message> GetAllChatMessages(Guid chatId);
+
+        Message PostMessage(Message _message);
     }
 }

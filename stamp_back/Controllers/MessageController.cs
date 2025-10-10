@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Mvc;
 using stamp_back.Dto;
 using stamp_back.Interfaces;
 using stamp_back.Models;
+using stamp_back.Repository;
+using static stamp_back.Dto.MessageDto;
 
 namespace stamp_back.Controllers
 {
@@ -52,5 +54,30 @@ namespace stamp_back.Controllers
         }
 
         //Check if user in chat before sending or reciving message
+
+        [HttpPost("{chatID:guid}")]
+        [ProducesResponseType(200, Type = typeof(Message))]
+        [ProducesResponseType(400)]
+        public IActionResult SendMessageInChat(SendMessageDto _message)
+        {
+            var message = new Message
+            {
+                Body = _message.Body,
+                ChatId = _message.ChatId,
+                UserId = _message.UserId,
+                TimeStamp = DateTime.UtcNow
+            };
+
+            var postedMessage = _messageRepository.PostMessage(message);
+
+            if (postedMessage is null) 
+            { 
+                return NotFound();
+            }
+
+            return Created("sucess", postedMessage);
+        }
     }
+
+    
 }

@@ -8,8 +8,15 @@
         public Guid UserId { get; set; }
         public Guid ChatId { get; set; }
 
-        public string UserName { get; set; } // Optional
-        public string ChatName { get; set; } // Optional
+
+        public class SendMessageDto
+        {
+
+            public required string Body { get; set; }
+            public required Guid UserId { get; set; }
+            public required Guid ChatId { get; set; }
+
+        }
     }
 
 }

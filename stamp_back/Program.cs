@@ -69,6 +69,7 @@ builder.Services.AddSwaggerGen(c =>
     });
 });
 
+
 builder.Services.AddDbContext<DataContext>(options =>
     options.UseMySql(
         builder.Configuration.GetConnectionString("DefaultConnection"),
